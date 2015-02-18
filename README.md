@@ -2,11 +2,17 @@
 c++ OOP
 
 1. En este proyecto, “Servidores de Correos”, hemos descompuesto los objetivos  en los pasos:
+
 •	Administrador Dominios y Servidores
+
 •	Administrar Cuentas
+
 •	Acceder una cuenta de en Servidor escogido y revisar el buzón
+
 •	Trabajar y Revisar  los correos
+
 •	Guardar y Cargar toda la información.
+
 •	Reportes que se especifican en el enunciado
 
 2. Estructura del  XML utilizado. Justificación
