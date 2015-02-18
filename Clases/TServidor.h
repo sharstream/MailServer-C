@@ -31,7 +31,7 @@ class TServidor : public TDomain
   public:
     TServidor(){aCuentas = new TGLinkedList();}
     TServidor(AnsiString pName,int pTope, int pMax);
-     virtual ~TServidor();
+    virtual ~TServidor();
 
     TGLinkedList* Cuentas(){return aCuentas;}
     void Cuentas(TGLinkedList* pCuentas){aCuentas = pCuentas;}

@@ -1,0 +1,56 @@
+//Importante//
+tenemos que ver los metodos del arbol ya que en todas partes estamos
+usando nodos generales donde deberian ir nodos binarios o una solucion 
+seria redefinir una nueva units para unirlas a las dos units arboles..
+
+- eliminar y modificar dominio en el arbol
+
+- eliminar y modificar una cuenta
+
+- cargar dominio servidor en el cu
+
+- montar los servidores que estan en las hojas en el arbol de dominio
+
+- enviar correo
+
+- verificar si la cuenta a la que estas mandando el correo es 
+internacional o no 
+
+- verificar camino en el arbol
+
+- separar cadena para verificar camino
+
+- verificar si el buzon esta lleno al mandar el correo
+
+- verificar si el tamaño establecido en el correo es 
+el ideal
+
+- llenar buzon cada vez que mande un correo 
+
+- eliminar correo del buzon
+
+- eliminar cada vez que elimine un correo dar espacio al buzon 
+de correo de esa cuenta
+
+- reportes...(David)
+
+- verificar las excepciones
+
+- XML
+
+- DBF fichero
+
+- arreglar la interfaz:
+
+limpiar ComboBox
+limpiar Listbox
+limpiar Edit
+limpiar CheckBox
+
+- trabajar con un TreeView
+
+- crear interfaces nuevas para el buzon de ambos servidores
+de cuentas
+   
+
+

@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!-- C++Builder XML Project -->
+<PROJECT>
+  <MACROS>
+    <VERSION value="BCB.06.00"/>
+    <PROJECT value="Servers.exe"/>
+    <OBJFILES value="Servers.obj Interfaz.obj ..\Clases\Administradora.obj 
+      ..\Clases\TCuenta.obj ..\Clases\TFichero.obj ..\Clases\TPerson.obj 
+      ..\Clases\TServidor.obj ..\Units\EstructuraArbolBin.obj 
+      ..\Units\EstructuraBinGral.obj ..\Units\EstructuraListas.obj 
+      ..\Units\UFile.obj CrearDomain.obj CrearCuenta.obj 
+      ..\Units\EstructuraArbolSec.obj Reportes.obj ..\Clases\TSonNode.obj 
+      AccederCuenta.obj BuzonUsuario.obj Mensajeria.obj ..\Units\UClassDBF.obj 
+      SalvarFiles.obj CuentaAdmin.obj"/>
+    <RESFILES value="Servers.res"/>
+    <IDLFILES value=""/>
+    <IDLGENFILES value=""/>
+    <DEFFILE value=""/>
+    <RESDEPEN value="$(RESFILES) Interfaz.dfm CrearDomain.dfm CrearCuenta.dfm Reportes.dfm 
+      AccederCuenta.dfm BuzonUsuario.dfm Mensajeria.dfm SalvarFiles.dfm 
+      CuentaAdmin.dfm"/>
+    <LIBFILES value=""/>
+    <LIBRARIES value=""/>
+    <SPARELIBS value="vcl.lib rtl.lib"/>
+    <PACKAGES value="vcl.bpi rtl.bpi dbrtl.bpi adortl.bpi vcldb.bpi vclx.bpi bdertl.bpi 
+      vcldbx.bpi ibxpress.bpi dsnap.bpi cds.bpi bdecds.bpi qrpt.bpi teeui.bpi 
+      teedb.bpi tee.bpi dss.bpi teeqr.bpi visualclx.bpi visualdbclx.bpi 
+      dsnapcrba.bpi dsnapcon.bpi bcbsmp.bpi vclie.bpi xmlrtl.bpi inet.bpi 
+      inetdbbde.bpi inetdbxpress.bpi inetdb.bpi nmfast.bpi webdsnap.bpi 
+      bcbie.bpi websnap.bpi soaprtl.bpi dclocx.bpi dbexpress.bpi dbxcds.bpi 
+      indy.bpi bcb2kaxserver.bpi"/>
+    <PATHCPP value=".;..\Clases;..\Clases;..\Clases;..\Clases;..\Clases;..\Units;..\Units;..\Units;..\Units;..\Units;..\Clases;..\Units"/>
+    <PATHPAS value=".;"/>
+    <PATHRC value=".;"/>
+    <PATHASM value=".;"/>
+    <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
+    <RELEASELIBPATH value="$(BCB)\lib\release"/>
+    <LINKER value="ilink32"/>
+    <USERDEFINES value="_DEBUG"/>
+    <SYSDEFINES value="_RTLDLL;NO_STRICT;USEPACKAGES"/>
+    <MAINSOURCE value="Servers.cpp"/>
+    <INCLUDEPATH value="..\..\Servidores\EJECUTABLE;..\Units;..\Clases;&quot;C:\Archivos de programa\Borland\CBuilder6\Projects&quot;;&quot;C:\Documents and Settings\Konoha\Escritorio\PROYECTO SEREVER\EJECUTABLE&quot;;&quot;C:\Documents and Settings\Konoha\Escritorio\PROYECTO SEREVER\Units&quot;;&quot;C:\Documents and Settings\Konoha\Escritorio\PROYECTO SEREVER\Clases&quot;;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="..\..\Servidores\EJECUTABLE;..\Units;..\Clases;&quot;C:\Archivos de programa\Borland\CBuilder6\Projects&quot;;&quot;C:\Documents and Settings\Konoha\Escritorio\PROYECTO SEREVER\EJECUTABLE&quot;;&quot;C:\Documents and Settings\Konoha\Escritorio\PROYECTO SEREVER\Units&quot;;&quot;C:\Documents and Settings\Konoha\Escritorio\PROYECTO SEREVER\Clases&quot;;$(BCB)\lib\obj;$(BCB)\lib"/>
+    <WARNINGS value="-w-par"/>
+    <OTHERFILES value=""/>
+  </MACROS>
+  <OPTIONS>
+    <IDLCFLAGS value="-I..\..\Servidores\EJECUTABLE -I..\Units -I..\Clases 
+      -I&quot;C:\Archivos de programa\Borland\CBuilder6\Projects&quot; 
+      -I&quot;C:\Documents and Settings\Konoha\Escritorio\PROYECTO SEREVER\EJECUTABLE&quot; 
+      -I&quot;C:\Documents and Settings\Konoha\Escritorio\PROYECTO SEREVER\Units&quot; 
+      -I&quot;C:\Documents and Settings\Konoha\Escritorio\PROYECTO SEREVER\Clases&quot; 
+      -I$(BCB)\include -I$(BCB)\include\vcl -src_suffix cpp -D_DEBUG -boa"/>
+    <CFLAG1 value="-Od -H=$(BCB)\lib\vcl60.csm -Hc -Vx -Ve -X- -r- -a8 -b- -k -y -v -vi- -c 
+      -tW -tWM"/>
+    <PFLAGS value="-$YD -$W -$O- -$A8 -v -JPHNE -M"/>
+    <RFLAGS value=""/>
+    <AFLAGS value="/mx /w2 /zd"/>
+    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn -v"/>
+    <OTHERFILES value=""/>
+  </OPTIONS>
+  <LINKER>
+    <ALLOBJ value="c0w32.obj $(PACKAGES) Memmgr.Lib sysinit.obj $(OBJFILES)"/>
+    <ALLRES value="$(RESFILES)"/>
+    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mti.lib"/>
+    <OTHERFILES value=""/>
+  </LINKER>
+  <FILELIST>
+      <FILE FILENAME="Servers.res" FORMNAME="" UNITNAME="Servers.res" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Servers.cpp" FORMNAME="" UNITNAME="Servers" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Interfaz.cpp" FORMNAME="frmPrincipal" UNITNAME="Interfaz" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Clases\Administradora.cpp" FORMNAME="" UNITNAME="Administradora.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Clases\TCuenta.cpp" FORMNAME="" UNITNAME="TCuenta.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Clases\TFichero.cpp" FORMNAME="" UNITNAME="TFichero.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Clases\TPerson.cpp" FORMNAME="" UNITNAME="TPerson.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Clases\TServidor.cpp" FORMNAME="" UNITNAME="TServidor.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Units\EstructuraArbolBin.cpp" FORMNAME="" UNITNAME="EstructuraArbolBin.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Units\EstructuraBinGral.cpp" FORMNAME="" UNITNAME="EstructuraBinGral.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Units\EstructuraListas.cpp" FORMNAME="" UNITNAME="EstructuraListas.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Units\UFile.cpp" FORMNAME="" UNITNAME="UFile.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="CrearDomain.cpp" FORMNAME="frmCrearDominio" UNITNAME="CrearDomain" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="CrearCuenta.cpp" FORMNAME="frmCrearCuenta" UNITNAME="CrearCuenta" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Units\EstructuraArbolSec.cpp" FORMNAME="" UNITNAME="EstructuraArbolSec" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Reportes.cpp" FORMNAME="frmReportes" UNITNAME="Reportes" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Clases\TSonNode.cpp" FORMNAME="" UNITNAME="TSonNode" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="AccederCuenta.cpp" FORMNAME="frmAccederCuenta" UNITNAME="AccederCuenta" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="BuzonUsuario.cpp" FORMNAME="frmBuzon" UNITNAME="BuzonUsuario" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Mensajeria.cpp" FORMNAME="frmMensajeria" UNITNAME="Mensajeria" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\Units\UClassDBF.cpp" FORMNAME="" UNITNAME="UClassDBF" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="SalvarFiles.cpp" FORMNAME="frmSaveDBFXML" UNITNAME="SalvarFiles" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="CuentaAdmin.cpp" FORMNAME="frmCrearCuentaAdmin" UNITNAME="CuentaAdmin" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+  </FILELIST>
+  <BUILDTOOLS>
+  </BUILDTOOLS>
+
+  <IDEOPTIONS>
+[Version Info]
+IncludeVerInfo=0
+AutoIncBuild=0
+MajorVer=1
+MinorVer=0
+Release=0
+Build=0
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=3082
+CodePage=1252
+
+[Version Info Keys]
+CompanyName=
+FileDescription=
+FileVersion=1.0.0.0
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
+Comments=
+
+[Debugging]
+DebugSourceDirs=$(BCB)\source\vcl
+
+[Parameters]
+RunParams=
+Launcher=
+UseLauncher=0
+DebugCWD=
+HostApplication=
+RemoteHost=
+RemotePath=
+RemoteLauncher=
+RemoteCWD=
+RemoteDebug=0
+
+[Compiler]
+ShowInfoMsgs=0
+LinkDebugVcl=0
+LinkCGLIB=0
+
+[CORBA]
+AddServerUnit=1
+AddClientUnit=1
+PrecompiledHeaders=1
+
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
+  </IDEOPTIONS>
+</PROJECT>

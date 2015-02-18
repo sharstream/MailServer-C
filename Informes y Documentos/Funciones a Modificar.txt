@@ -1,0 +1,204 @@
+void TController :: PonerHijos(int &posArb, int cantHijos, TGBinTreeNode* nodoPadre, TSeqPostOrderTree* secTree)
+{
+  posArb--;
+
+  for (int i = 0; i < cantHijos; i++)
+  {
+    TPostOrderNode* nodoSec = (TPostOrderNode* ) secTree->Item(posArb);
+
+    TGBinTreeNode* nuevoNodoArbol = new TGBinTreeNode(nodoSec->Info());
+
+    aArbol->InsertNode(nuevoNodoArbol, nodoPadre);
+
+    if(nodoSec->Degree() > 0)
+    {
+      int grado = nodoSec->Degree();
+
+      PonerHijos(posArb, grado, nuevoNodoArbol, secTree);
+    }
+
+    if(nodoSec->Degree() > 0 || i + 1 < cantHijos)
+      posArb--;
+  }
+}
+//metodo recursivo
+//---------------------------------------------------------------------------------------------------------------------
+
+void TController :: SalvarXML (AnsiString pLoc, AnsiString fileName)
+{
+  FILE* fOut = fopen(fileName.c_str(), "wt");
+
+  SalvarCadenaAFichero("<?xml version=\"1.0\"?>",fOut);
+  FinDeLinea(fOut);
+  SalvarCadenaAFichero("<XML>",fOut);
+  FinDeLinea(fOut);
+
+  SalvarCadenaAFichero("  <CARPETA PADRE>",fOut);
+  SalvarCadenaAFichero(pLoc,fOut);
+  SalvarCadenaAFichero("</CARPETA PADRE>",fOut);
+  FinDeLinea(fOut);
+
+  SalvarCadenaAFichero("  <SISTEMA ARCHIVOS>",fOut);
+  SalvarCadenaAFichero(aTypeSistem,fOut);
+  SalvarCadenaAFichero("</SISTEMA ARCHIVOS>",fOut);
+  FinDeLinea(fOut);
+
+  SalvarCadenaAFichero("  <ELEMENTOS>",fOut);
+  FinDeLinea(fOut);
+
+  TGLinkedList* lista = ListaDeHijos(pLoc);
+
+  for (int i = 0; i < lista->Length(); i++)
+  {
+    TNode* Node = (TNode*)lista->Item(i);
+    TBinTreeNode* NodeA = (TBinTreeNode*)Node->Info();
+    TCarpeta* elemento = (TCarpeta*)NodeA->Info();
+    
+    SalvarCadenaAFichero("    <ELEMENTO>",fOut);
+    FinDeLinea(fOut);
+
+    SalvarCadenaAFichero("      <NOMBRE>",fOut);
+    SalvarCadenaAFichero(elemento->Name(),fOut);
+    SalvarCadenaAFichero("</NOMBRE>",fOut);
+    FinDeLinea(fOut);
+
+    SalvarCadenaAFichero("      <FECHA CREACION>",fOut);
+    SalvarCadenaAFichero((elemento->FechaCre()).DateString(),fOut);
+    SalvarCadenaAFichero("</FECHA CREACION>",fOut);
+    FinDeLinea(fOut);
+
+   //PONER TIPO DE ELEMENTO
+
+    SalvarCadenaAFichero("    </ELEMENTO>",fOut);
+    FinDeLinea(fOut);
+  }
+
+  SalvarCadenaAFichero("  </ELEMENTOS>",fOut);
+  FinDeLinea(fOut);
+
+  SalvarCadenaAFichero("<XML>",fOut);
+  FinDeLinea(fOut);
+
+  fclose(fOut);
+}
+//---------------------------------------------------------------------------
+void TController :: SalvarCadenaAFichero(AnsiString cadena, FILE* file)
+{
+  fputs(cadena.c_str(), file);
+}
+//---------------------------------------------------------------------------
+void TController :: FinDeLinea(FILE* file)
+{
+  fputs("\n", file);
+}
+//---------------------------------------------------------------------------
+void TForm1::PintarArbol()
+{
+  TreeView1->Items->Clear();
+
+  TreeView1->Items->Add(NULL, "C");  //crear la raiz
+
+  TGLinkedList* lista = PC->EstructuraArbol();
+
+  if(lista)
+    for (int i = 0; i < lista->Length(); i++)
+    {
+      TNodoHijos* nodo = (TNodoHijos*)lista->Item(i);
+
+      TTreeNode* nodoActual = TreeView1->Items->AddChild(TreeView1->Items->Item[0], nodo->Nombre());
+
+      PintarHijos(nodo, nodoActual);
+    }
+
+}
+//---------------------------------------------------------------------------
+void TForm1 :: PintarHijos(TNodoHijos* nodo, TTreeNode* padre)
+{
+  TGLinkedList* lista = nodo->ListaHijos();
+
+  if(lista)
+  {
+    for (int i = 0; i < lista->Length(); i++)
+    {
+      TNodoHijos* nodo = (TNodoHijos*)lista->Item(i);
+
+      TTreeNode* nodoActual = TreeView1->Items->AddChild(padre, nodo->Nombre());
+
+      PintarHijos(nodo, nodoActual);
+    }
+
+
+  }
+}
+//----------------------------------------------------------------------------
+
+TGLinkedList* TController :: SeparaCadena(AnsiString cadena)
+{
+  TGLinkedList * list = new TGLinkedList();
+
+  bool detenerse = false;
+
+  while(!detenerse)
+  {
+    int pos = cadena.Pos("\\");
+
+    AnsiString* trozo = new AnsiString;
+    if(pos == 0)
+    {
+      *trozo = cadena;
+      detenerse = true;
+    }
+    else
+    {
+      *trozo = cadena.SubString(1, pos - 1);
+
+      cadena = cadena.SubString(pos + 1, cadena.Length());
+    }
+
+    list->Add(trozo);
+  }
+
+  return list;
+}
+//--------------------------------------------------------------------------------------
+
+TBinTreeNode* TController::VerficarDireccionCarpeta(TGLinkedList* Lista)
+{
+  TBinTreeNode* NodeUltimo = NULL;
+  TBinTreeNode* NodePadre = aArbol->Root();
+  AnsiString* primero = (AnsiString*)Lista-> Item(0);
+    int i = 1;
+    if(*primero == "C")
+    {
+      if(Lista->Length()==1)
+      {
+        NodeUltimo =NodePadre;
+        return NodeUltimo ;
+      }
+      while(i < Lista->Length())
+      {
+        AnsiString* elem = (AnsiString*)Lista->Item(i);
+        TGLinkedList* List = aArbol->GetSons(NodePadre);
+        if(List != NULL)
+        {
+          TBinTreeNode* Node = (TBinTreeNode*)List->FirstThat(Damon::BuscaNode, elem);
+          if(!Node)
+            return NodeUltimo;
+          else
+          {
+            i++;
+            NodePadre = Node;
+          }
+        }
+        else
+          return NULL;
+      }
+    }
+  else
+    return NodeUltimo;
+  if(typeid(*(TFichero*)NodePadre->Info()) != typeid(TFichero))
+    NodeUltimo = NodePadre;
+  return NodeUltimo;
+}
+
+

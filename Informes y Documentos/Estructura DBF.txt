@@ -1,0 +1,42 @@
+typedef struct
+{
+ char borrado;
+ char nombre[30];
+ char edad[2];
+ char sexo;
+ char direccion[50];
+ char cargo[15];
+ char tarea[50];
+} SRecDBF;
+
+#define SIZE_HEADER     2
+#define SIZE_NAME       11
+#define RESERVED_HEADER 20
+#define RESERVED_DES    14
+#define MAX_REC_SIZE    4000
+
+
+char END_HEADER = 13;
+typedef char FieldName[SIZE_NAME];
+
+//Encabezamiento general
+typedef struct {
+unsigned char   aIdent,
+                aYear,
+                aMonth,
+                aDay;
+int             aRecCount;
+unsigned short	aHeaderSize,
+                aRecSize;
+char            aReserved[RESERVED_HEADER];
+} TSdbfGeneralHeader ;
+
+//descripcion de los campos
+typedef struct {
+FieldName      aName;
+unsigned char  aType;
+int            aRelPosition;
+unsigned char  aLong,
+               aDecimal;
+char           aReserved[RESERVED_DES];
+} TSdbfFieldDescriptor ;

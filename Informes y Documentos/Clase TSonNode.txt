@@ -1,0 +1,201 @@
+class TNodoHijos
+{
+  private:
+    AnsiString nombre;
+    AnsiString tipo;
+    TGLinkedList* listaHijos;
+
+  public:
+    TNodoHijos(){}
+    ~TNodoHijos(){}
+
+    AnsiString Nombre(){return nombre;}
+    AnsiString Tipo(){return tipo;}
+    TGLinkedList* ListaHijos(){return listaHijos;}
+
+    void Nombre(AnsiString pNombre){nombre = pNombre;}
+    void Tipo(AnsiString pTipo){tipo = pTipo;}
+    void ListaHijos(TGLinkedList* lista){listaHijos = lista;}
+};
+//---------------------------------------------------------------------------
+
+TGLinkedList* TAdministradora :: EstructuraArbol()
+{
+  TBinTreeNode* raiz = aArbol->Root();
+
+  return HijosDelNodo((TGBinTreeNode*)raiz);
+}
+//----------------------------------------------------------------------------
+TGLinkedList* TAdministradora :: HijosDelEseNodo (TGBinTreeNode* node)
+{
+  if(!node->IsLeaf())
+  {
+    TGLinkedList* nodosHijos = aArbol->GetSons((TBinTreeNode*)node);
+
+    TGLinkedList* listaHijos = new TGLinkedList();  //del tipo hijoNodos
+
+    for(int i = 0; i < nodosHijos->Length(); i++)
+    {
+      TBinTreeNode* nodoActual = (TBinTreeNode*)nodosHijos->Item(i);
+      void* elemento = nodoActual->Info();
+
+      TNodoHijos* nuevoNodo = new TNodoHijos();
+
+      nuevoNodo->Nombre(((TCarpeta*)elemento)->Name());
+
+      //buscar tipo
+
+      TGLinkedList* hijos = HijosDelNodo((TGBinTreeNode*)nodoActual);
+
+      nuevoNodo->ListaHijos(hijos);
+
+      listaHijos->Add(nuevoNodo);
+    }
+
+    return listaHijos;
+  }
+
+  return NULL;
+}
+
+//----------------------------------------------------------------------------
+void TController :: Salvar(AnsiString direccion)
+{
+  TSeqPostOrderTree* arbolSec = new TSeqPostOrderTree(aArbol);
+
+  TFile* file = new TFile(direccion);
+
+  file->Open("wb");
+
+  long pos = 0;
+
+  file->SeekTo(pos);
+
+  int cantElememtos = arbolSec->Length();
+  file->Write(&cantElememtos, sizeof(int));
+
+  file->SeekTo(pos += sizeof(int));
+
+  for (int i = 0; i < arbolSec->Length(); i++)
+  {
+    TPostOrderNode* nodo = (TPostOrderNode*) arbolSec->Item(i);
+
+    TSPostOrderNode nodoSalvar;
+
+    TETipoElemento tipo = TipoDeElemento(nodo->Info());
+
+    nodoSalvar.grado = nodo->Degree();
+    nodoSalvar.tipoDeDato = tipo;
+
+    file->Write(&nodoSalvar, sizeof(TSPostOrderNode));
+
+    file->SeekTo(pos += sizeof(TSPostOrderNode));
+
+    void* info;
+
+    int size = TamanoDelElemento(nodo->Info(), info);
+
+    file->Write(info, size);
+
+    file->SeekTo(pos += size);
+  }
+
+  file->Close();
+}
+//--------------------------------------------------------------------
+void TController :: Restaurar(AnsiString direccion)
+{
+  TSeqPostOrderTree* secTree = new TSeqPostOrderTree();
+
+  TFile* file = new TFile(direccion);
+
+  file->Open("rb");
+
+  long pos = 0;
+
+  file->SeekTo(pos);
+
+  int cantElementos;
+
+  file->Read(&cantElementos, sizeof(int));
+
+  file->SeekTo(pos += sizeof(int));
+
+  for (int i = 0; i < cantElementos; i++)
+  {
+     TSFichFAT32 est;
+
+     TSFichExt3 est1;
+
+     TSFichNTFS est2;
+
+     TSCarpNTFS est3;
+
+     TSCarpFAT32 est4;
+
+     TSCarpExt3 est5;
+
+     TSDispositivo est6;
+
+
+     TSPostOrderNode nodoLeido;
+
+     file->Read(&nodoLeido, sizeof(TSPostOrderNode));
+
+     file->SeekTo(pos += sizeof(TSPostOrderNode));
+
+     void* info;
+     void* infoObj;
+
+     switch(nodoLeido.tipoDeDato)
+     {
+        case FicheroFat32:
+           file->Read(&est, TamanoDadoTipo(nodoLeido.tipoDeDato));
+           infoObj = DeEstructuraAClase(&est, nodoLeido.tipoDeDato);
+           break;
+
+        case FicheroEXT3:
+           file->Read(&est1, TamanoDadoTipo(nodoLeido.tipoDeDato));
+           infoObj = DeEstructuraAClase(&est1, nodoLeido.tipoDeDato);
+           break;
+
+        case FicheroNTFS:
+           file->Read(&est2, TamanoDadoTipo(nodoLeido.tipoDeDato));
+           infoObj = DeEstructuraAClase(&est2, nodoLeido.tipoDeDato);
+           break;
+
+        case CarpetaFAT32:
+           file->Read(&est4, TamanoDadoTipo(nodoLeido.tipoDeDato));
+           infoObj = DeEstructuraAClase(&est4, nodoLeido.tipoDeDato);
+           break;
+
+        case CarpetaEXT3:
+           file->Read(&est5, TamanoDadoTipo(nodoLeido.tipoDeDato));
+           infoObj = DeEstructuraAClase(&est5, nodoLeido.tipoDeDato);
+           break;
+
+        case CarpetaNTFS:
+           file->Read(&est3, TamanoDadoTipo(nodoLeido.tipoDeDato));
+           infoObj = DeEstructuraAClase(&est3, nodoLeido.tipoDeDato);
+           break;
+
+        default:
+           file->Read(&est6, TamanoDadoTipo(nodoLeido.tipoDeDato));
+           infoObj = DeEstructuraAClase(&est6, nodoLeido.tipoDeDato);
+     }
+
+     TPostOrderNode* nodo = new TPostOrderNode(infoObj, nodoLeido.grado);
+     secTree->Add(nodo);
+
+     file->SeekTo(pos += TamanoDadoTipo(nodoLeido.tipoDeDato));
+    //
+  }
+
+  file->Close();
+
+  //crear arbol general
+  DeSecuencialAGeneral(secTree);
+  TSeqPostOrderTree* secTree2 = new TSeqPostOrderTree(aArbol);
+  DeSecuencialAGeneral(secTree2);
+}
+//--------------------------------------------------------------------------

@@ -1,0 +1,62 @@
+void TEmpresa::CargarArbol(TSReg Reg, TSReg Padre)
+    {
+    TGBinTreeNode* NodoInsertar;
+    int CantH = Reg.CantHijos;
+    char SinCargo[3] = {'S','/','C'};
+    TTarea* Tarea = new TTarea(Reg.Info.aTarea.Contenido, Reg.Info.aTarea.FPlazo);
+    if(StrComp(Reg.Info.aCargo, SinCargo) ==0)
+        {
+        TPersona* Persona = new TPersona(Reg.Info.aNombre, Reg.Info.aSexo, Reg.Info.aEdad, Reg.Info.aDireccion, Reg.Info.aOcupado, Tarea);
+        NodoInsertar = new TGBinTreeNode(Persona);
+        }
+    else
+        {
+        TJefe* Jefe = new TJefe(Reg.Info.aNombre, Reg.Info.aSexo, Reg.Info.aEdad, Reg.Info.aDireccion, Reg.Info.aCargo, Reg.Info.aOcupado, Tarea);
+        NodoInsertar = new TGBinTreeNode(Jefe);
+        }
+    TGBinTreeNode* NodoPadre = NULL;
+    if(Padre.Info.aEdad != 0)
+        {
+        NodoPadre = BuscarNombre(Padre.Info.aNombre);
+        }
+    ArbolEmpresa->InsertNode(NodoInsertar,NodoPadre);
+    // Pregunto por los hijos para insertarlos
+    if(CantH > 0)
+        {
+        TSReg OtroReg;
+        afEmpresa->Read(&OtroReg,sizeof(TSReg));
+        CargarArbol(OtroReg, Reg);
+        CantH--;
+        }
+    }
+//------------------------------------------------------------------------------
+void TEmpresa::Cargar(AnsiString FileName)
+    {
+    if(FileName!=afEmpresa->FileName())
+    afEmpresa->Rename(FileName);
+    bool Open = afEmpresa->IsOpen();
+    if(!Open)
+        afEmpresa->Open("rb");
+    TSReg Reg;
+    afEmpresa->Read(&Reg,sizeof(TSReg));
+    if(Reg.Info.aEdad > 0)
+        {
+        TSReg RegPadre;
+        RegPadre.Info.aEdad = 0; // Para la comprobacion dentro del metodo recursivo
+        CargarArbol(Reg, RegPadre);
+        if(!Open)
+            afEmpresa->Close();
+        }
+    }
+//------------------------------------------------------------------------------
+void TEmpresa::GuardarArbol(AnsiString FileName)
+    {
+    afEmpresa->Rename(FileName);
+    bool Open = afEmpresa->IsOpen();
+    if(!Open)
+        afEmpresa->Open("wb+");
+    
+    ArbolEmpresa->PreOrderForEach(ArbolEmpresa->Root(), Demonio::GuardarTodo, afEmpresa);
+    if(!Open)
+        afEmpresa->Close();
+    }

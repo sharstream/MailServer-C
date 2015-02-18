@@ -1,0 +1,214 @@
+//-----------------------------------------------------------------------------
+//Internacional
+void TAdministradora::LoadServersInternacional(AnsiString pNameFile)
+{
+  TFile* internacional = new TFile(pNameFile);
+  internacional->Open("rb+");
+  internacional->SeekTo(0);
+
+  if(internacional->IsOpen())
+  {
+    TSServerInfo server;
+    internacional->Read(&server,sizeof(TSServerInfo));
+    char* buffer = NULL;
+    buffer = new char[server.size];
+    internacional->Read(buffer,sizeof(char),server.size);
+
+    while(!internacional->Eof())
+    {
+      TServidor* Servidor = new TServidor();
+      Servidor->Tope(server.Tope);
+      Servidor->Max(server.LengthMail);
+      char* name = NULL;
+      name = new char[server.size];
+      strcpy(name,buffer);
+      Servidor->NameDomain(name);
+      aInternacionales->Insert(Servidor);
+      internacional->Read(&server,sizeof(TSServerInfo));
+      buffer = NULL;
+      buffer = new char[server.size];
+      internacional->Read(buffer,server.size);            //ver si podemos borrar este espacio en memoria
+    }
+  }
+  internacional->Close();
+  delete internacional;
+} 
+
+//-----------------------------------------------------------------------------
+
+/*void TAdministradora :: SaveServersInternacional(AnsiString pNameFile)
+{
+  TFile* internacional = new TFile(pNameFile);
+  internacional->Open("wb");
+  internacional->SeekTo(0);
+
+  if(internacional->IsOpen())
+  {
+    TSServerInfo server;
+
+    for(int i = 0; i < aInternacionales->Length(); i++)
+    {
+      TServidor* servidor = (TServidor*)aInternacionales->ItemInfo(i);
+      int NameSize = servidor->NameDomain().Length();
+      char* buffer = NULL;
+      buffer = new char[NameSize];
+      server.Tope = servidor->Tope();
+      server.LengthMail = servidor->Max();
+      server.size = NameSize;
+      strcpy(buffer,servidor->NameDomain().c_str());   //nombre (AnsiString) convertido en char* copiado en el buffer
+
+      internacional->Write(&server,sizeof(TSServerInfo));
+      internacional->Write(buffer,sizeof(char),NameSize);
+    }
+  }
+  internacional->Close();
+  delete internacional;
+} */
+//-----------------------------------------------------------------------------
+//Nacionales
+void TAdministradora :: SaveDominioTree(AnsiString pNameDomain)
+{
+  TFile* TreeFile = new TFile(pNameDomain);
+  TreeFile->Open("wb");
+  TreeFile->SeekTo(0);
+
+  TSeqPreOrderTree* preorder = new TSeqPreOrderTree(aTree);
+
+  if(TreeFile->IsOpen())
+  {
+    TSDomainInfo artic;
+    for(int i = 0; i < preorder->Length(); i++)
+    {
+      TPreOrderNode* node = (TPreOrderNode*)preorder->ItemInfo(i);
+      artic.End = node->End();
+      artic.LinkedRight = node->RightLink();
+      TDomain* domain = (TDomain*)node->Info();
+      int size = domain->NameDomain().Length();
+      artic.Size = size;
+      char* buffer = NULL;
+      buffer = new char[size];
+      strcpy(buffer,domain->NameDomain().c_str());
+      TreeFile->Write(&artic,sizeof(TSDomainInfo));
+      TreeFile->Write(buffer,sizeof(char),size);
+    }
+  }
+  TreeFile->Close();
+  delete TreeFile;
+  delete preorder;
+}
+//-----------------------------------------------------------------------------
+void TAdministradora :: LoadDomainsNacionales(AnsiString pDomainNacional)
+{
+  TFile* TreeFile = new TFile(pDomainNacional);
+  TreeFile->Open("rb+");
+  TreeFile->SeekTo(0);
+
+  if(TreeFile->IsOpen())
+  {
+    TSDomainInfo artic;
+    TreeFile->Read(&artic,sizeof(TSServerInfo));
+    char* buffer = NULL;
+    buffer = new char[artic.Size];
+    TreeFile->Read(buffer,sizeof(char),artic.Size);
+
+    while(!TreeFile->Eof())
+    {
+      TPreOrderNode* node = new  TPreOrderNode();
+      TDomain* domain = new TDomain();
+      node->End(artic.End);
+      node->RightLink(artic.LinkedRight);
+      char* name=NULL;
+      name = new char[artic.Size];
+      strcpy (name,buffer);
+      domain->NameDomain(name);
+      node->Info(domain);
+      aDomainsPreOrderList->Insert(node);
+      TreeFile->Read(&artic,sizeof(TSDomainInfo));
+      buffer = NULL;
+      buffer = new char[artic.Size];
+      TreeFile->Read(buffer,sizeof(char),artic.Size);
+    }
+  }
+  TreeFile->Close();
+  delete TreeFile;
+}
+//-----------------------------------------------------------------------------
+void TAdministradora :: SaveServersNacionales(AnsiString pServerName)
+{
+  TFile* serverFile = new TFile(pServerName);
+  serverFile->Open("wb");
+  serverFile->SeekTo(0);
+
+  if(serverFile->IsOpen())
+  {
+    aNacionalesServers = aTree->GetLeaves();
+    TSServerInfo server;
+
+    for(int i = 0; i < aNacionalesServers->Length(); i++)  //un cilo para..
+    {
+      TGBinTreeNode* node = (TGBinTreeNode*)aNacionalesServers->ItemInfo(i);
+      TServidor* servidor = (TServidor*)node->Info();    //..de cada servidor coger..
+      int NameSize = servidor->NameDomain().Length();    // ..el nombre..
+      char* buffer = NULL;
+      buffer = new char[NameSize];            //..en un buffer..
+      server.Tope = servidor->Tope();            //..el tope..
+      server.LengthMail = servidor->Max();      //..el maximo de un correo..
+      server.size = NameSize;
+      strcpy(buffer,servidor->NameDomain().c_str());//llenar el buffer
+      serverFile->Write(&server,sizeof(TSServerInfo));//.. y escribir esa informacion  en el fichero de serverNAciona;les
+      serverFile->Write(buffer,sizeof(char),NameSize);
+    }
+  }
+  serverFile->Close();
+  delete serverFile;
+}
+//-----------------------------------------------------------------------------
+void TAdministradora :: LoadServersNacionales(AnsiString pServerName)
+{
+  TFile* serverFile = new TFile(pServerName);
+  serverFile->Open("rb+");
+  serverFile->SeekTo(0);
+
+  if(serverFile->IsOpen())
+  {
+    TSServerInfo server;
+
+    serverFile->Read(&server,sizeof(TSServerInfo));      //.. lee la struc con info{Tope,LengthMail,size}..
+    char* buffer = NULL;
+    buffer = new char[server.size];            //.. prepara el bufer ..
+    serverFile->Read(buffer,sizeof(char),server.size);           //..pa leer el nombre..
+
+    while(!serverFile->Eof())              //.. hasta que se hallan leidos todos los articulos del fichero  de serverNAcionales
+    {
+      TServidor* Servidor = new TServidor();          //.. se crea un srvidor para llenar sus datos
+      Servidor->Tope(server.Tope);               //.. llena el tope ..
+      Servidor->Max(server.LengthMail);             //.. el tamaño max de correo..
+      char* name = NULL;
+      name = new char[server.size];
+      strcpy(name,buffer);         //.. se copia el nombre..
+      Servidor->NameDomain(name);
+      aNacionalesServers->Insert(Servidor);           //..se inserta ese servidor ..
+      serverFile->Read(&server,sizeof(TSServerInfo));
+      buffer = NULL;
+      buffer = new char[server.size];                   //.. prepara el bufer ..
+      serverFile->Read(buffer,sizeof(char),server.size);
+    }
+  } //ahora la lista  aNacionalesServers es ta llena de TServidor k se insertaran en las hojas
+  serverFile->Close();
+  delete serverFile;
+}
+//-----------------------------------------------------------------------------
+/*void TAdministradora :: MountNacionalServDiagram()
+{  //llamar almetodo recursivo y pasarle el listado de el arbol
+   // y entonces cargara en el arbol los dominios
+   //luego a ese arbol pedirle las hojas y entonces llenar esa lista ahora con
+   //aNacionalesServers
+   TPreOrderNode* PreNode=(TPreOrderNode*)aDomainsPreOrderList->ItemInfo(0);
+   PreOrderConvertListToTree(PreNode,NULL,aDomainsPreOrderList);
+   TGLinkedList* Leaves= aTree->GetLeaves();
+   for(int i = 0; i < aNacionalesServers->Length(); i++)
+   {
+     Leaves->Insert(aNacionalesServers->ItemInfo(i),i);
+   }
+} */
+//-----------------------------------------------------------------------------
