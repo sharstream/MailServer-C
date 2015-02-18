@@ -18,7 +18,6 @@ c++ OOP
 2. Estructura del  XML utilizado. Justificación
 
 ?xml version=\"1.0\"?
-
 <Domains>
     <Servers>
        <Server>
